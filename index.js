@@ -1,11 +1,7 @@
-// TODO: Include packages needed for this application
 import fs from "fs";
 import inquirer from 'inquirer';
 import path from "path";
-import generateMarkdown from "./utils/generateMarkdown.js";
-
-
-// TODO: Create an array of questions for user input
+import { generateMarkdown } from "./utils/generateMarkdown.js"; 
 
 const questions = [
   {
@@ -63,7 +59,7 @@ const questions = [
   {
     type: "input",
     name: "contributors",
-    message: "Please list any contributors. (Use GitHub usernames)",
+    message: "Please list any contributors.",
     default: "",
   },
   {
@@ -73,37 +69,18 @@ const questions = [
   },
 ];
 
-
-
-// TODO: Create a function to write README file
 function writeToFile(fileName, data) {
     fs.writeFile(fileName, data, (err) =>
-    err ? console.error(err) : console.log("Success! Your README.md file has been generated.")
+        err ? console.error(err) : console.log("Success! Your README.md file has been generated.")
     );
 }
 
-// TODO: Create a function to initialize app
 function init() {
-    inquirer.prompt(questions).then((answers) => {
-        console.log("Creating Professional README.md File...");
-        
-        // Ensure the dist directory exists
-        const distDir = path.join(process.cwd(), 'dist');
-        if (!fs.existsSync(distDir)) {
-            fs.mkdirSync(distDir);
-        }
-
-        // Debugging: Log the answers to verify the license value
-        console.log(answers);
-
-        // Generate the markdown content
-        const markdownContent = generateMarkdown({...answers});
-
-        // Write the new README.md to the dist folder
-        writeToFile("./dist/README.md", markdownContent);
+    inquirer.prompt(questions).then((responses) => {
+        console.log("Generating README.md...");
+        const markdown = generateMarkdown(responses);
+        writeToFile("dist/README.md", markdown);
     });
-    
 }
 
-// Function call to initialize app
 init();
